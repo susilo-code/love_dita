@@ -20,14 +20,14 @@ export default function AnniversaryWebsite() {
 
   /* ===================== DATA PESAN & FOTO ===================== */
   const messages = [
-    '10 tahun yang lalu, kita memulai perjalanan ini bersama yange... meski gak selalu mudah, ada pasang surut',
+    '11 tahun yang lalu, kita memulai perjalanan ini bersama yange... meski gak selalu mudah, ada pasang surut',
     'Mas banyak salah, banyak ngecewain yange, mas masih terus belajar .....',
     'Maaf ya yange, masih belajar teruus, tapi mas yakin kok lama-lama salahnya makin dikit, hehehe',
     'Maaf ya yangeeee......',
     'Sekarang udah 25 Desember 2025, 3 hari yang lalu juga hari Ibu ....',
     'Makasih ya yange udah jadi ibu yang luar biasa, ibu yang handle 3 anak sendirian, pasti gak mudah kan yangeee',
     'Ngurus ini itu, nyariin kelas ini itu, drama setiap harinya yang menguji mental yangee',
-    'Selamat Ulang Tahun Pernikahan yang ke-10 dan Selamat Hari Ibu yangeee❤️',
+    'Selamat Ulang Tahun Pernikahan yang ke-11 dan Selamat Hari Ibu yangeee❤️',
     'Semoga mas bisa jadi suami yang lebih baik lagi buat yange',
     'Terima kasih atas semua perjuangan dan pengorbanan yangeee',
     'Terima kasih, Dita Puspa Rini',
@@ -44,6 +44,9 @@ export default function AnniversaryWebsite() {
     '/images/photo4.jpg',
     '/images/photo5.jpg',
     '/images/photo6.jpg',
+    '/images/photo7.jpg',
+    '/images/photo8.jpg',
+    '/images/photo9.jpg',
   ];
 
   /* ===================== LOGIC UTAMA ===================== */
@@ -181,7 +184,8 @@ export default function AnniversaryWebsite() {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-center mb-2">11 Tahun Bersama</h1>
-            <p className="text-center text-white/60 mb-8 text-sm">Masukan kunci hati kita...</p>
+            <h3 className="text-3xl font-bold text-center mb-2 italic">1 Desember 2014 - 1 Desember 2025 🎉</h3>
+            <p className="text-center text-white/60 mb-8 text-sm">Masukan password dulu yangee...</p>
 
             <input
               type="password"
@@ -205,7 +209,7 @@ export default function AnniversaryWebsite() {
           <div className="text-center max-w-sm animate-in fade-in slide-in-from-bottom-8 duration-700">
             <h2 className="text-2xl font-semibold mb-3">Siap yangeee? ❤️</h2>
             <p className="text-white/80 mb-8 leading-relaxed">
-              Ada sesuatu buat kamu. Pastikan volume HP kamu nyala ya biar romantis...
+              Ada sesuatu buat yangee. Pastikan volume HP yange nyala ya biar romantis...
             </p>
             
             <button

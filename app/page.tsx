@@ -31,6 +31,7 @@ export default function AnniversaryWebsite() {
     'Selamat Ulang Tahun Pernikahan yang ke-10 dan Selamat hari Ibu yangeee❤️',
     'Terima kasih atas semua perjuangan dan pengorbanan yangeee',
     'Terima kasih, Dita Puspa Rini',
+    'Maaf y yange, hadiahnya cuma jilbab ....'
   ];
 
   const photos = [

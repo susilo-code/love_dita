@@ -1,17 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Heart, Play, ArrowLeft, ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { Heart, Play, ArrowLeft, ArrowRight, Volume2 } from 'lucide-react';
 
 export default function AnniversaryWebsite() {
-  /* ===================== GLOBAL STATE ===================== */
+  /* ===================== REFS ===================== */
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const autoTimer = useRef<NodeJS.Timeout | null>(null);
-  const audioInitialized = useRef(false);
 
+  /* ===================== STATE ===================== */
   const [mounted, setMounted] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
-  const [showAudioPrompt, setShowAudioPrompt] = useState(false);
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showPlay, setShowPlay] = useState(false);
@@ -20,20 +20,17 @@ export default function AnniversaryWebsite() {
   const [currentPage, setCurrentPage] = useState(0);
   const [photoIndex, setPhotoIndex] = useState(0);
 
-  /* ===================== DATA (STATIC, SAFE FOR SSR) ===================== */
+  /* ===================== DATA ===================== */
   const messages = [
-    '10 tahun yang lalu, kita memulai perjalanan ini bersama yange...meski gak selalu mudah, ada pasang surut',
-    'Mas, banyak salah, banyak ngecewain yange, mas masih terus belajar .....',
-    'maaf y yange, masih belajar teruus, tapi mas yakin kok lama-lama salahnya makin dikit, hehehe',
-    'maaf y yangeeee......',
-    'Sekarang udah 25 Desember, 3 hari yang lalu juga hari Ibu ....',
-    'Makasih y yange udah jadi ibu yang luar biasa, ibu yang handle 3 anak sendirian, pasti gak mudah kan yangeee',
-    'ngurus ini itu, nyariin kelas ini itu, drama setiap harinya yang menguji mental yangee',
-    'Selamat Ulang Tahun Pernikahan yang ke-10 dan Selamat hari Ibu yangeee❤️',
-    'Semoga mas bisa jadi suami yang lebih baik lagi buat yange',
-    'Terima kasih atas semua perjuangan dan pengorbanan yangeee',
+    '10 tahun yang lalu, kita memulai perjalanan indah ini bersama...',
+    'Setiap hari bersamamu adalah anugerah yang tak ternilai harganya',
+    'Terima kasih telah menjadi pasangan hidup, sahabat, dan cinta sejatiku',
+    'Dari ribuan kenangan manis, semuanya tetap indah di hatiku',
+    'Kita telah melewati suka dan duka, tertawa dan menangis bersama',
+    '10 tahun ini hanyalah permulaan, masih banyak petualangan yang menanti kita',
+    'Aku bersyukur setiap hari karena memilih untuk berbagi hidup denganmu',
+    'Selamat Ulang Tahun Pernikahan yang ke-10, Cintaku! ❤️',
     'Terima kasih, Dita Puspa Rini',
-    'Maaf y yangeee, hadiahnya cuma jilbab, huhuhu'
   ];
 
   const photos = [
@@ -41,30 +38,27 @@ export default function AnniversaryWebsite() {
     '/images/photo2.jpg',
     '/images/photo3.jpg',
     '/images/photo4.jpg',
-    '/images/photo5.jpg',
-    '/images/photo6.jpg',
   ];
 
-
-  /* ===================== MOUNT FLAG (FIX HYDRATION) ===================== */
+  /* ===================== MOUNT ===================== */
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  /* ===================== FLOATING HEARTS (CLIENT ONLY) ===================== */
+  /* ===================== FLOATING HEARTS ===================== */
   const FloatingHearts = () => {
     if (!mounted) return null;
 
     const hearts = [
-      { left: '10%', top: '20%', size: 28 },
-      { left: '30%', top: '70%', size: 20 },
-      { left: '50%', top: '40%', size: 24 },
-      { left: '70%', top: '60%', size: 22 },
-      { left: '85%', top: '30%', size: 18 },
+      { left: '10%', top: '20%', size: 24 },
+      { left: '30%', top: '70%', size: 18 },
+      { left: '50%', top: '40%', size: 22 },
+      { left: '70%', top: '60%', size: 20 },
+      { left: '85%', top: '30%', size: 16 },
     ];
 
     return (
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <div className="fixed inset-0 pointer-events-none z-0">
         {hearts.map((h, i) => (
           <Heart
             key={i}
@@ -82,28 +76,33 @@ export default function AnniversaryWebsite() {
     );
   };
 
-  /* ===================== PLAY AUDIO FUNCTION ===================== */
+  /* ===================== AUDIO PLAY (MOBILE SAFE) ===================== */
   const playAudio = () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Reset audio untuk mobile
-    audio.load();
+    audio.muted = false;
     audio.volume = 0.6;
 
-    const playPromise = audio.play();
-    
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setAudioPlaying(true);
-          setShowAudioPrompt(false);
-          audioInitialized.current = true;
-        })
-        .catch((error) => {
-          console.log('Audio play failed:', error);
-          setShowAudioPrompt(true);
-        });
+    audio
+      .play()
+      .then(() => {
+        setAudioUnlocked(true);
+        setAudioPlaying(true);
+      })
+      .catch(() => {});
+  };
+
+  const toggleAudio = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audioPlaying) {
+      audio.pause();
+      setAudioPlaying(false);
+    } else {
+      audio.play().catch(() => {});
+      setAudioPlaying(true);
     }
   };
 
@@ -119,124 +118,46 @@ export default function AnniversaryWebsite() {
     return () => {
       if (autoTimer.current) clearInterval(autoTimer.current);
     };
-  }, [currentPage, messages.length, photos.length]);
+  }, [currentPage]);
 
   const stopAuto = () => {
     if (autoTimer.current) clearInterval(autoTimer.current);
   };
 
-  /* ===================== HANDLERS ===================== */
+  /* ===================== LOGIN ===================== */
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === 'mylovedita') {
       setIsLoggedIn(true);
-      // Coba play audio saat login berhasil (user interaction)
-      setTimeout(() => {
-        playAudio();
-        setShowPlay(true);
-      }, 100);
+      setTimeout(() => setShowPlay(true), 300);
     } else {
-      alert('Kata kunci salah yangeee, coba lagi atuh 💜');
+      alert('Kata kunci salah 💜');
     }
   };
 
   const handlePlay = () => {
     setShowPlay(false);
     setCurrentPage(1);
-    // Coba play audio saat tombol play diklik
-    playAudio();
   };
 
-  const toggleAudio = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (audioPlaying) {
-      audio.pause();
-      setAudioPlaying(false);
-    } else {
-      audio.play()
-        .then(() => setAudioPlaying(true))
-        .catch(() => setShowAudioPrompt(true));
-    }
-  };
-
-  const handleEnableAudio = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    // Force reload dan play untuk mobile
-    audio.load();
-    audio.volume = 0.6;
-
-    const playPromise = audio.play();
-    
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          setAudioPlaying(true);
-          setShowAudioPrompt(false);
-          audioInitialized.current = true;
-        })
-        .catch((error) => {
-          console.error('Failed to play audio:', error);
-          alert('Gagal memutar audio. Pastikan volume HP tidak silent dan coba lagi!');
-        });
-    }
-  };
-
-  /* ===================== AUDIO ELEMENT (GLOBAL) ===================== */
-  const AudioPlayer = () => (
-    <audio 
-      ref={audioRef} 
-      loop 
-      preload="auto" 
-      playsInline
-    >
+  /* ===================== AUDIO ELEMENT (ONE ONLY) ===================== */
+  const GlobalAudio = () => (
+    <audio ref={audioRef} loop preload="auto" playsInline>
       <source src="/audio/bcl.mp3" type="audio/mpeg" />
     </audio>
   );
-
-  /* ===================== AUDIO PROMPT (MOBILE) ===================== */
-  const AudioPrompt = () => {
-    if (!showAudioPrompt) return null;
-
-    return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-white/10 backdrop-blur border border-white/20 rounded-3xl p-8 max-w-sm text-center">
-          <Volume2 className="w-16 h-16 text-pink-300 mx-auto mb-4" />
-          <h3 className="text-white text-xl mb-2">Aktifkan Musik?</h3>
-          <p className="text-white/80 text-sm mb-6">
-            Nyalakan musik untuk pengalaman yang lebih romantis 🎵
-          </p>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowAudioPrompt(false)}
-              className="flex-1 py-3 bg-white/20 rounded-xl text-white hover:bg-white/30 transition"
-            >
-              Nanti
-            </button>
-            <button
-              onClick={handleEnableAudio}
-              className="flex-1 py-3 bg-pink-400 rounded-xl text-white font-semibold hover:bg-pink-500 transition"
-            >
-              Ya, Nyalakan
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   /* ===================== LOGIN PAGE ===================== */
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-purple-800 to-amber-900">
+        <GlobalAudio />
         <FloatingHearts />
-        <AudioPlayer />
 
         <form
           onSubmit={handleLogin}
+          autoComplete="off"
+          suppressHydrationWarning
           className="z-10 w-full max-w-md p-10 rounded-3xl bg-white/10 backdrop-blur border border-white/20"
         >
           <h1 className="text-3xl text-white mb-6 text-center">
@@ -246,15 +167,14 @@ export default function AnniversaryWebsite() {
           <input
             type="password"
             value={password}
+            autoComplete="new-password"
+            suppressHydrationWarning
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Kata kunci..."
-            className="w-full mb-4 p-3 rounded-xl bg-white/20 text-white placeholder:text-white/60"
+            className="w-full mb-4 p-3 rounded-xl bg-white/20 text-white"
           />
 
-          <button 
-            type="submit"
-            className="w-full py-3 bg-pink-400 rounded-xl text-white font-semibold hover:bg-pink-500 transition"
-          >
+          <button className="w-full py-3 bg-pink-400 rounded-xl text-white font-semibold">
             Masuk
           </button>
         </form>
@@ -265,20 +185,25 @@ export default function AnniversaryWebsite() {
   /* ===================== PLAY PAGE ===================== */
   if (showPlay) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-900 via-purple-800 to-amber-900 p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-6 bg-gradient-to-br from-purple-900 via-purple-800 to-amber-900">
+        <GlobalAudio />
         <FloatingHearts />
-        <AudioPlayer />
 
-        <div className="text-center mb-8 z-10">
-          <h2 className="text-white text-2xl mb-2">Siap untuk memulai yangeee❤️?</h2>
-          <p className="text-white/80 text-sm">Tekan tombol play yange, muehehehe</p>
-        </div>
+        {!audioUnlocked && (
+          <button
+            onClick={playAudio}
+            onTouchStart={playAudio}
+            className="px-8 py-4 bg-pink-400 text-white rounded-2xl flex items-center gap-3"
+          >
+            <Volume2 /> Nyalakan Musik
+          </button>
+        )}
 
         <button
           onClick={handlePlay}
-          className="z-10 p-8 bg-white/20 rounded-full hover:bg-white/30 transition transform hover:scale-110"
+          className="p-6 bg-white/20 rounded-full"
         >
-          <Play className="w-24 h-24 text-pink-300" fill="currentColor" />
+          <Play className="w-20 h-20 text-pink-300" />
         </button>
       </div>
     );
@@ -287,43 +212,38 @@ export default function AnniversaryWebsite() {
   /* ===================== MESSAGE PAGE ===================== */
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-purple-900 via-purple-800 to-amber-900">
+      <GlobalAudio />
       <FloatingHearts />
-      <AudioPlayer />
-      <AudioPrompt />
 
-      <button
-        onClick={toggleAudio}
-        className="fixed top-6 right-6 z-10 bg-white/20 p-3 rounded-full hover:bg-white/30 transition"
-      >
-        {audioPlaying ? (
-          <Volume2 className="w-6 h-6 text-white" />
-        ) : (
-          <VolumeX className="w-6 h-6 text-white" />
-        )}
-      </button>
+      {audioUnlocked && (
+        <button
+          onClick={toggleAudio}
+          className="fixed top-6 right-6 z-10 bg-white/20 p-3 rounded-full"
+        >
+          {audioPlaying ? '⏸' : '▶'}
+        </button>
+      )}
 
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
-        <div className="p-10 bg-white/10 rounded-3xl text-white text-center text-2xl backdrop-blur">
+        <div className="p-10 bg-white/10 rounded-3xl text-white text-center text-2xl">
           {messages[currentPage - 1]}
         </div>
 
         <div className="overflow-hidden rounded-3xl">
           <img
             src={photos[photoIndex]}
-            alt="Anniversary Photo"
             className="w-full h-80 object-cover transition-all duration-1000"
           />
         </div>
 
-        <div className="flex justify-between text-white">
+        <div className="flex justify-between">
           <button
             onClick={() => {
               stopAuto();
               setCurrentPage((p) => Math.max(1, p - 1));
             }}
-            className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-xl hover:bg-white/30 transition"
           >
-            <ArrowLeft size={20} /> Sebelumnya
+            <ArrowLeft /> Sebelumnya
           </button>
 
           <button
@@ -333,9 +253,8 @@ export default function AnniversaryWebsite() {
                 Math.min(messages.length, p + 1)
               );
             }}
-            className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-xl hover:bg-white/30 transition"
           >
-            Selanjutnya <ArrowRight size={20} />
+            Selanjutnya <ArrowRight />
           </button>
         </div>
       </div>

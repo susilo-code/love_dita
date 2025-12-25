@@ -184,8 +184,8 @@ export default function AnniversaryWebsite() {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-center mb-2">11 Tahun Bersama</h1>
-            <h3 className="text-3xl font-bold text-center mb-2 italic">1 Desember 2014 - 1 Desember 2025 🎉</h3>
-            <p className="text-center text-white/60 mb-8 text-sm">Masukan password dulu yangee...</p>
+            <p className="text-sm font-bold text-center mb-4 italic">1 Desember 2014 - 1 Desember 2025 🎉</p>
+            <p className="text-center text-white/60 mb-8 text-sm">Masukan passwordnya dulu yangee...</p>
 
             <input
               type="password"

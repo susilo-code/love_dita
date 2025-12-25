@@ -22,15 +22,18 @@ export default function AnniversaryWebsite() {
 
   /* ===================== DATA (STATIC, SAFE FOR SSR) ===================== */
   const messages = [
-    '10 tahun yang lalu, kita memulai perjalanan indah ini bersama...',
-    'Setiap hari bersamamu adalah anugerah yang tak ternilai harganya',
-    'Terima kasih telah menjadi pasangan hidup, sahabat, dan cinta sejatiku',
-    'Dari ribuan kenangan manis, semuanya tetap indah di hatiku',
-    'Kita telah melewati suka dan duka, tertawa dan menangis bersama',
-    '10 tahun ini hanyalah permulaan, masih banyak petualangan yang menanti kita',
-    'Aku bersyukur setiap hari karena memilih untuk berbagi hidup denganmu',
-    'Selamat Ulang Tahun Pernikahan yang ke-10, Cintaku! ❤️',
+    '10 tahun yang lalu, kita memulai perjalanan ini bersama yange...meski gak selalu mudah, ada pasang surut',
+    'Mas, banyak salah, banyak ngecewain yange, mas masih terus belajar .....',
+    'maaf y yange, masih belajar teruus, tapi mas yakin kok lama-lama salahnya makin dikit, hehehe',
+    'maaf y yangeeee......',
+    'Sekarang udah 25 Desember, 3 hari yang lalu juga hari Ibu ....',
+    'Makasih y yange udah jadi ibu yang luar biasa, ibu yang handle 3 anak sendirian, pasti gak mudah kan yangeee',
+    'ngurus ini itu, nyariin kelas ini itu, drama setiap harinya yang menguji mental yangee',
+    'Selamat Ulang Tahun Pernikahan yang ke-10 dan Selamat hari Ibu yangeee❤️',
+    'Semoga mas bisa jadi suami yang lebih baik lagi buat yange',
+    'Terima kasih atas semua perjuangan dan pengorbanan yangeee',
     'Terima kasih, Dita Puspa Rini',
+    'Maaf y yangeee, hadiahnya cuma jilbab, huhuhu'
   ];
 
   const photos = [
@@ -38,7 +41,10 @@ export default function AnniversaryWebsite() {
     '/images/photo2.jpg',
     '/images/photo3.jpg',
     '/images/photo4.jpg',
+    '/images/photo5.jpg',
+    '/images/photo6.jpg',
   ];
+
 
   /* ===================== MOUNT FLAG (FIX HYDRATION) ===================== */
   useEffect(() => {
@@ -130,7 +136,7 @@ export default function AnniversaryWebsite() {
         setShowPlay(true);
       }, 100);
     } else {
-      alert('Kata kunci salah 💜');
+      alert('Kata kunci salah yangeee, coba lagi atuh 💜');
     }
   };
 
@@ -264,8 +270,8 @@ export default function AnniversaryWebsite() {
         <AudioPlayer />
 
         <div className="text-center mb-8 z-10">
-          <h2 className="text-white text-2xl mb-2">Siap untuk memulai?</h2>
-          <p className="text-white/80 text-sm">Tekan tombol play untuk melanjutkan</p>
+          <h2 className="text-white text-2xl mb-2">Siap untuk memulai yangeee❤️?</h2>
+          <p className="text-white/80 text-sm">Tekan tombol play yange, muehehehe</p>
         </div>
 
         <button

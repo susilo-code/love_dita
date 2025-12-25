@@ -180,7 +180,7 @@ export default function AnniversaryWebsite() {
                 <Lock className="w-8 h-8 text-pink-300" />
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-center mb-2">10 Tahun Bersama</h1>
+            <h1 className="text-3xl font-bold text-center mb-2">11 Tahun Bersama</h1>
             <p className="text-center text-white/60 mb-8 text-sm">Masukan kunci hati kita...</p>
 
             <input
@@ -214,7 +214,7 @@ export default function AnniversaryWebsite() {
             >
               <span className="flex items-center gap-3 text-lg font-bold">
                 <Play fill="currentColor" size={20} />
-                Putar Kenangan
+                Putar .....
               </span>
             </button>
           </div>

@@ -79,20 +79,26 @@ export default function AnniversaryWebsite() {
   /* ===================== PLAY AUDIO FUNCTION ===================== */
   const playAudio = () => {
     const audio = audioRef.current;
-    if (!audio || audioInitialized.current) return;
+    if (!audio) return;
 
-    audioInitialized.current = true;
+    // Reset audio untuk mobile
+    audio.load();
     audio.volume = 0.6;
 
-    audio.play()
-      .then(() => {
-        setAudioPlaying(true);
-        setShowAudioPrompt(false);
-      })
-      .catch((error) => {
-        console.log('Audio play failed:', error);
-        setShowAudioPrompt(true);
-      });
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setAudioPlaying(true);
+          setShowAudioPrompt(false);
+          audioInitialized.current = true;
+        })
+        .catch((error) => {
+          console.log('Audio play failed:', error);
+          setShowAudioPrompt(true);
+        });
+    }
   };
 
   /* ===================== AUTO SLIDES ===================== */
@@ -118,7 +124,11 @@ export default function AnniversaryWebsite() {
     e.preventDefault();
     if (password === 'mylovedita') {
       setIsLoggedIn(true);
-      setTimeout(() => setShowPlay(true), 400);
+      // Coba play audio saat login berhasil (user interaction)
+      setTimeout(() => {
+        playAudio();
+        setShowPlay(true);
+      }, 100);
     } else {
       alert('Kata kunci salah 💜');
     }
@@ -149,15 +159,24 @@ export default function AnniversaryWebsite() {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.play()
-      .then(() => {
-        setAudioPlaying(true);
-        setShowAudioPrompt(false);
-        audioInitialized.current = true;
-      })
-      .catch(() => {
-        alert('Gagal memutar audio. Coba lagi!');
-      });
+    // Force reload dan play untuk mobile
+    audio.load();
+    audio.volume = 0.6;
+
+    const playPromise = audio.play();
+    
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setAudioPlaying(true);
+          setShowAudioPrompt(false);
+          audioInitialized.current = true;
+        })
+        .catch((error) => {
+          console.error('Failed to play audio:', error);
+          alert('Gagal memutar audio. Pastikan volume HP tidak silent dan coba lagi!');
+        });
+    }
   };
 
   /* ===================== AUDIO ELEMENT (GLOBAL) ===================== */

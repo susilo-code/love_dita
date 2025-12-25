@@ -31,7 +31,9 @@ export default function AnniversaryWebsite() {
     'Semoga mas bisa jadi suami yang lebih baik lagi buat yange',
     'Terima kasih atas semua perjuangan dan pengorbanan yangeee',
     'Terima kasih, Dita Puspa Rini',
-    'Maaf ya yangeee, hadiahnya cuma jilbab, huhuhu (Semoga suka ya!)'
+    'Maaf ya yangeee, hadiahnya cuma jilbab, huhuhu (Semoga suka ya!)',
+    'Maaf telat banget ini ngucapinnya juga ...',
+    'I love you yange, I love you Dita Puspa Rini❤️'
   ];
 
   // Pastikan file ini ada di folder public/images/

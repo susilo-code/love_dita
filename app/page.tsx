@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Heart, Play, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Heart, Play, ArrowLeft, ArrowRight, Volume2, VolumeX } from 'lucide-react';
 
 export default function AnniversaryWebsite() {
   /* ===================== GLOBAL STATE ===================== */
@@ -11,6 +11,7 @@ export default function AnniversaryWebsite() {
 
   const [mounted, setMounted] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [showAudioPrompt, setShowAudioPrompt] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showPlay, setShowPlay] = useState(false);
@@ -21,17 +22,15 @@ export default function AnniversaryWebsite() {
 
   /* ===================== DATA (STATIC, SAFE FOR SSR) ===================== */
   const messages = [
-    '10 tahun yang lalu, kita memulai perjalanan ini bersama yange...meski gak selalu mudah, ada pasang surut',
-    'Mas, banyak salah, banyak ngecewain yange, mas masih terus belajar .....',
-    'maaf y yange, masih belajar teruus, tapi mas yakin kok lama-lama salahnya makin dikit, hehehe',
-    'maaf y yangeeee......',
-    'Sekarang udah 25 Desember, 3 hari yang lalu juga hari Ibu ....',
-    'Makasih y yange udah jadi ibu yang luar biasa, ibu yang handle 3 anak sendirian, pasti gak mudah kan yangeee',
-    'ngurus ini itu, nyariin kelas ini itu, drama setiap harinya yang menguji mental yangee',
-    'Selamat Ulang Tahun Pernikahan yang ke-10 dan Selamat hari Ibu yangeee❤️',
-    'Terima kasih atas semua perjuangan dan pengorbanan yangeee',
+    '10 tahun yang lalu, kita memulai perjalanan indah ini bersama...',
+    'Setiap hari bersamamu adalah anugerah yang tak ternilai harganya',
+    'Terima kasih telah menjadi pasangan hidup, sahabat, dan cinta sejatiku',
+    'Dari ribuan kenangan manis, semuanya tetap indah di hatiku',
+    'Kita telah melewati suka dan duka, tertawa dan menangis bersama',
+    '10 tahun ini hanyalah permulaan, masih banyak petualangan yang menanti kita',
+    'Aku bersyukur setiap hari karena memilih untuk berbagi hidup denganmu',
+    'Selamat Ulang Tahun Pernikahan yang ke-10, Cintaku! ❤️',
     'Terima kasih, Dita Puspa Rini',
-    'Maaf y yange, hadiahnya cuma jilbab ....'
   ];
 
   const photos = [
@@ -39,8 +38,6 @@ export default function AnniversaryWebsite() {
     '/images/photo2.jpg',
     '/images/photo3.jpg',
     '/images/photo4.jpg',
-    '/images/photo5.jpg',
-    '/images/photo6.jpg',
   ];
 
   /* ===================== MOUNT FLAG (FIX HYDRATION) ===================== */
@@ -79,65 +76,24 @@ export default function AnniversaryWebsite() {
     );
   };
 
-  /* ===================== AUTO PLAY AUDIO (HANYA SEKALI) ===================== */
-  useEffect(() => {
-    if (!mounted || audioInitialized.current) return;
-
+  /* ===================== PLAY AUDIO FUNCTION ===================== */
+  const playAudio = () => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || audioInitialized.current) return;
 
     audioInitialized.current = true;
+    audio.volume = 0.6;
 
-    // Coba autoplay langsung
-    const tryAutoplay = () => {
-      audio.muted = false;
-      audio.volume = 0.6;
-      
-      audio.play()
-        .then(() => {
-          setAudioPlaying(true);
-        })
-        .catch(() => {
-          // Jika gagal, coba dengan muted dulu
-          audio.muted = true;
-          audio.play()
-            .then(() => {
-              setAudioPlaying(true);
-              // Unmute setelah user interaksi
-              setupUnmute();
-            })
-            .catch(() => {
-              // Jika tetap gagal, tunggu user click
-              setupUnmute();
-            });
-        });
-    };
-
-    const setupUnmute = () => {
-      const unmute = () => {
-        if (audio.muted) {
-          audio.muted = false;
-          audio.volume = 0.6;
-        }
-        if (audio.paused) {
-          audio.play()
-            .then(() => setAudioPlaying(true))
-            .catch(() => {});
-        }
-        document.removeEventListener('click', unmute);
-        document.removeEventListener('touchstart', unmute);
-        document.removeEventListener('keydown', unmute);
-      };
-
-      document.addEventListener('click', unmute, { once: true });
-      document.addEventListener('touchstart', unmute, { once: true });
-      document.addEventListener('keydown', unmute, { once: true });
-    };
-
-    // Coba play saat component mount
-    tryAutoplay();
-
-  }, [mounted]);
+    audio.play()
+      .then(() => {
+        setAudioPlaying(true);
+        setShowAudioPrompt(false);
+      })
+      .catch((error) => {
+        console.log('Audio play failed:', error);
+        setShowAudioPrompt(true);
+      });
+  };
 
   /* ===================== AUTO SLIDES ===================== */
   useEffect(() => {
@@ -171,6 +127,8 @@ export default function AnniversaryWebsite() {
   const handlePlay = () => {
     setShowPlay(false);
     setCurrentPage(1);
+    // Coba play audio saat tombol play diklik
+    playAudio();
   };
 
   const toggleAudio = () => {
@@ -181,9 +139,25 @@ export default function AnniversaryWebsite() {
       audio.pause();
       setAudioPlaying(false);
     } else {
-      audio.play().catch(() => {});
-      setAudioPlaying(true);
+      audio.play()
+        .then(() => setAudioPlaying(true))
+        .catch(() => setShowAudioPrompt(true));
     }
+  };
+
+  const handleEnableAudio = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    audio.play()
+      .then(() => {
+        setAudioPlaying(true);
+        setShowAudioPrompt(false);
+        audioInitialized.current = true;
+      })
+      .catch(() => {
+        alert('Gagal memutar audio. Coba lagi!');
+      });
   };
 
   /* ===================== AUDIO ELEMENT (GLOBAL) ===================== */
@@ -197,6 +171,37 @@ export default function AnniversaryWebsite() {
       <source src="/audio/bcl.mp3" type="audio/mpeg" />
     </audio>
   );
+
+  /* ===================== AUDIO PROMPT (MOBILE) ===================== */
+  const AudioPrompt = () => {
+    if (!showAudioPrompt) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="bg-white/10 backdrop-blur border border-white/20 rounded-3xl p-8 max-w-sm text-center">
+          <Volume2 className="w-16 h-16 text-pink-300 mx-auto mb-4" />
+          <h3 className="text-white text-xl mb-2">Aktifkan Musik?</h3>
+          <p className="text-white/80 text-sm mb-6">
+            Nyalakan musik untuk pengalaman yang lebih romantis 🎵
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowAudioPrompt(false)}
+              className="flex-1 py-3 bg-white/20 rounded-xl text-white hover:bg-white/30 transition"
+            >
+              Nanti
+            </button>
+            <button
+              onClick={handleEnableAudio}
+              className="flex-1 py-3 bg-pink-400 rounded-xl text-white font-semibold hover:bg-pink-500 transition"
+            >
+              Ya, Nyalakan
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   /* ===================== LOGIN PAGE ===================== */
   if (!isLoggedIn) {
@@ -235,15 +240,20 @@ export default function AnniversaryWebsite() {
   /* ===================== PLAY PAGE ===================== */
   if (showPlay) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-purple-800 to-amber-900">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-900 via-purple-800 to-amber-900 p-4">
         <FloatingHearts />
         <AudioPlayer />
 
+        <div className="text-center mb-8 z-10">
+          <h2 className="text-white text-2xl mb-2">Siap untuk memulai?</h2>
+          <p className="text-white/80 text-sm">Tekan tombol play untuk melanjutkan</p>
+        </div>
+
         <button
           onClick={handlePlay}
-          className="z-10 p-8 bg-white/20 rounded-full hover:bg-white/30 transition"
+          className="z-10 p-8 bg-white/20 rounded-full hover:bg-white/30 transition transform hover:scale-110"
         >
-          <Play className="w-24 h-24 text-pink-300" />
+          <Play className="w-24 h-24 text-pink-300" fill="currentColor" />
         </button>
       </div>
     );
@@ -254,12 +264,17 @@ export default function AnniversaryWebsite() {
     <div className="min-h-screen p-6 bg-gradient-to-br from-purple-900 via-purple-800 to-amber-900">
       <FloatingHearts />
       <AudioPlayer />
+      <AudioPrompt />
 
       <button
         onClick={toggleAudio}
         className="fixed top-6 right-6 z-10 bg-white/20 p-3 rounded-full hover:bg-white/30 transition"
       >
-        {audioPlaying ? '⏸' : '▶'}
+        {audioPlaying ? (
+          <Volume2 className="w-6 h-6 text-white" />
+        ) : (
+          <VolumeX className="w-6 h-6 text-white" />
+        )}
       </button>
 
       <div className="max-w-3xl mx-auto space-y-8 relative z-10">
